@@ -7,6 +7,11 @@
     <AssemblyName>$(MSBuildProjectName)</AssemblyName>
     <RootNamespace>WrenSharp.Internal</RootNamespace>
   </PropertyGroup>
+  
+  <PropertyGroup Condition="'$(Configuration)'=='Release'">
+    <DebugSymbols>False</DebugSymbols>
+    <DebugType>None</DebugType>
+  </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DefineConstants>$(DefineConstants);WRENSHARP_EXT</DefineConstants>
@@ -16,10 +21,21 @@
     <DefineConstants>$(DefineConstants);WRENSHARP_EXT</DefineConstants>
   </PropertyGroup>
 
+  <PropertyGroup Condition="$([MSBuild]::IsOSPlatform('Linux'))">
+    <LibraryFilename>libwren.so</LibraryFilename>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="$([MSBuild]::IsOSPlatform('Windows'))">
+    <LibraryFilename>wren.dll</LibraryFilename>
+  </PropertyGroup>
+
   <ItemGroup>
-    <None Update="wren.dll">
+    <None Update="$(LibraryFilename)">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+  
+  <ItemGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">  
     <None Update="wren.exp">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
